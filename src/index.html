@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' https: data:" />
+  <title>TraeHop</title>
+  <link rel="icon" type="image/png" href="../build/icon.png" />
+  <script src="theme-init.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <img src="../build/icon.png" alt="" class="brand-icon-img" width="32" height="32" />
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">TraeHop</div>
+          <div class="brand-sub" id="brand-sub">Trae 账号跃迁</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button type="button" class="nav-item active" data-page="overview">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span>概览</span>
+        </button>
+        <button type="button" class="nav-item" data-page="accounts">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>账号</span>
+          <span id="nav-account-count" class="nav-badge">0</span>
+        </button>
+        <button type="button" class="nav-item" data-page="clean">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
+          <span>清理</span>
+        </button>
+        <button type="button" class="nav-item" data-page="settings">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <span>设置</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button type="button" id="btn-theme-toggle" class="theme-toggle" title="切换主题">
+          <svg class="theme-icon theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="theme-icon theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <span id="theme-toggle-label">深色</span>
+        </button>
+        <button type="button" id="btn-add" class="btn-add">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        添加账号
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <!-- 概览 -->
+      <section id="page-overview" class="page active">
+        <header class="page-header">
+          <div>
+            <h1>概览</h1>
+            <p class="page-desc">账号与会话状态总览</p>
+          </div>
+          <button type="button" id="btn-refresh-overview" class="btn btn-ghost">刷新用量</button>
+        </header>
+
+        <div id="overview-loading" class="page-loading">
+          <div class="loading-spinner" aria-hidden="true"></div>
+          <p class="loading-text">正在检测账号…</p>
+        </div>
+
+        <div id="overview-empty" class="empty-state hidden">
+          <div class="empty-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <p class="empty-title">还没有账号</p>
+          <p class="empty-desc">添加您本人名下的 Trae 账号，即可一键切换会话</p>
+          <button type="button" class="btn btn-primary" data-action="open-add">添加第一个账号</button>
+        </div>
+
+        <div id="overview-content" class="hidden">
+          <div class="overview-strip">
+            <div class="strip-stat">
+              <span id="stat-total" class="strip-value">0</span>
+              <span class="strip-label">账号总数</span>
+            </div>
+            <div class="strip-stat strip-ok">
+              <span id="stat-active" class="strip-value">0</span>
+              <span class="strip-label">有剩余用量</span>
+              <span id="stat-active-ratio" class="strip-meta">—</span>
+            </div>
+            <div class="strip-stat strip-warn">
+              <span id="stat-no-quota" class="strip-value">0</span>
+              <span class="strip-label">用量已满</span>
+              <span id="stat-no-quota-ratio" class="strip-meta">—</span>
+            </div>
+            <div class="strip-stat strip-accent">
+              <span id="stat-left" class="strip-value">—</span>
+              <span class="strip-label">剩余合计</span>
+              <span id="stat-limit-unit" class="strip-meta">用量单位</span>
+            </div>
+            <div class="strip-stat strip-usage">
+              <span id="stat-used-pct-inline" class="strip-value">0%</span>
+              <span class="strip-label">总使用率</span>
+              <span class="strip-meta"><span id="stat-used-inline">—</span> / <span id="stat-limit-inline">—</span></span>
+              <div class="strip-stat-progress" aria-hidden="true">
+                <div id="strip-progress-fill" class="strip-progress-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="overview-body">
+            <div class="overview-grid">
+              <div class="panel usage-panel">
+                <h3>用量概览</h3>
+                <div class="usage-ring-wrap">
+                  <svg class="usage-ring" viewBox="0 0 120 120">
+                    <circle class="ring-bg" cx="60" cy="60" r="52" />
+                    <circle id="ring-progress" class="ring-progress" cx="60" cy="60" r="52" />
+                  </svg>
+                  <div class="ring-center">
+                    <span id="stat-used-pct" class="ring-pct">0%</span>
+                    <span class="ring-label">已使用</span>
+                  </div>
+                </div>
+                <div class="usage-detail">
+                  <div><span>已用</span><strong id="stat-used">—</strong></div>
+                  <div><span>总额</span><strong id="stat-limit">—</strong></div>
+                </div>
+              </div>
+
+              <div class="panel info-panel">
+                <h3>其他信息</h3>
+                <div class="info-row">
+                  <span>Token 过期</span>
+                  <strong id="stat-expired">0</strong>
+                </div>
+                <div class="info-row">
+                  <span>即将过期</span>
+                  <strong id="stat-expiring">0</strong>
+                </div>
+                <div class="info-row">
+                  <span>最近重置</span>
+                  <strong id="stat-reset" class="info-sm">—</strong>
+                </div>
+                <div class="info-row">
+                  <span>上次刷新</span>
+                  <strong id="last-refresh-time" class="info-sm">—</strong>
+                </div>
+              </div>
+            </div>
+
+            <div id="expiry-alerts" class="panel alerts-panel hidden">
+              <h3>需要关注</h3>
+              <ul id="expiry-alert-list" class="alert-list"></ul>
+            </div>
+
+            <div class="panel history-panel">
+              <h3>用量历史</h3>
+              <div class="history-table">
+                <div class="history-header hidden">
+                  <span>账号</span>
+                  <span>剩余</span>
+                  <span>时间</span>
+                </div>
+                <div id="usage-history" class="usage-history">
+                  <p class="muted">刷新用量后会记录历史</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 账号 -->
+      <section id="page-accounts" class="page">
+        <header class="page-header">
+          <div>
+            <h1>账号</h1>
+            <p class="page-desc">管理您本人名下的 Trae 账号，手动切换 IDE 登录会话</p>
+          </div>
+          <div class="header-actions">
+            <button type="button" id="btn-export-accounts" class="btn btn-ghost">导出</button>
+            <button type="button" id="btn-import-file" class="btn btn-ghost">导入</button>
+            <button type="button" id="btn-import-trae" class="btn btn-ghost">从 Trae 导入</button>
+            <button type="button" id="btn-refresh-usage" class="btn btn-ghost">刷新用量</button>
+          </div>
+        </header>
+
+        <div class="accounts-toolbar">
+          <div class="toolbar-left">
+            <div class="search-wrap">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input type="search" id="account-search" class="search-input" placeholder="搜索邮箱、备注、分组…" />
+            </div>
+            <select id="account-sort" class="select">
+              <option value="default">默认排序</option>
+              <option value="quota-desc">剩余用量 ↓</option>
+              <option value="quota-asc">剩余用量 ↑</option>
+              <option value="name">名称</option>
+              <option value="expiry">Token 过期时间</option>
+            </select>
+          </div>
+          <div class="filter-bar">
+            <button type="button" class="filter-chip active" data-filter="all">全部</button>
+            <button type="button" class="filter-chip" data-filter="has-quota">有剩余用量</button>
+            <button type="button" class="filter-chip" data-filter="no-quota">用量已满</button>
+            <button type="button" class="filter-chip" data-filter="expiring-soon">即将过期</button>
+            <button type="button" class="filter-chip" data-filter="expired">已过期</button>
+            <label class="select-all-row">
+              <input type="checkbox" id="select-all-accounts" />
+              <span>全选</span>
+            </label>
+            <span id="filter-count" class="filter-count"></span>
+          </div>
+        </div>
+
+        <div id="accounts-switch-tip" class="accounts-tip">
+          <div class="accounts-tip-body">
+            <p class="accounts-tip-title">切换说明</p>
+            <div class="accounts-tip-items">
+              <span class="accounts-tip-item"><strong>切换</strong> 手动写入目标账号登录信息并重启 Trae，适合日常工作 / 个人账号切换</span>
+              <span class="accounts-tip-item"><strong>重置环境后切换</strong>（高级）先清理本地缓存与设备标识再切换，仅在会话异常时使用，可能违反平台服务条款</span>
+            </div>
+          </div>
+          <button type="button" id="btn-dismiss-switch-tip" class="accounts-tip-close" title="不再显示" aria-label="关闭说明">×</button>
+        </div>
+
+        <div id="account-list" class="account-list">
+          <p class="empty">暂无账号</p>
+        </div>
+      </section>
+
+      <!-- 清理 -->
+      <section id="page-clean" class="page">
+        <header class="page-header">
+          <div>
+            <h1>环境清理</h1>
+            <p class="page-desc">重置 Trae 本地缓存与设备标识（高级功能，请谨慎使用）</p>
+          </div>
+          <button type="button" id="btn-rescan-clean" class="btn btn-ghost">重新扫描</button>
+        </header>
+
+        <div class="clean-layout">
+          <div class="clean-top">
+            <div class="clean-card clean-scan-card">
+              <div class="clean-card-head">
+                <span class="clean-card-title">可清理空间</span>
+                <span id="clean-platform" class="platform-tag"></span>
+              </div>
+              <p id="clean-scan-size" class="clean-scan-size">扫描中…</p>
+              <ul id="clean-scan-items" class="clean-scan-items"></ul>
+            </div>
+
+            <div class="clean-card clean-guide-card">
+              <p class="clean-card-title">清理说明</p>
+              <p class="clean-warning">此操作会重置 Trae 本地设备标识与登录缓存。仅建议在会话损坏或 IDE 无法登录时使用，请勿用于规避平台计费或风控。</p>
+              <ul class="clean-steps">
+                <li>关闭 Trae IDE，清除缓存与登录状态</li>
+                <li>重置本地 machineId 等设备标识</li>
+                <li>完成后回到「账号」页手动切换目标账号</li>
+              </ul>
+              <div class="clean-btns">
+                <button type="button" id="btn-start-clean" class="btn btn-primary btn-clean">开始清理</button>
+                <button type="button" id="btn-cancel-clean" class="btn btn-ghost hidden">取消</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="clean-card clean-log-card">
+            <p class="clean-card-title">清理日志</p>
+            <pre id="clean-log" class="clean-log" data-placeholder="清理开始后，日志会显示在这里…"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- 设置 -->
+      <section id="page-settings" class="page">
+        <header class="page-header">
+          <div>
+            <h1>设置</h1>
+            <p class="page-desc">路径与自动刷新</p>
+          </div>
+        </header>
+
+        <div class="settings-grid">
+        <div class="settings-group">
+          <h3>外观</h3>
+          <p class="settings-desc">切换界面配色，偏好会自动保存</p>
+          <div class="theme-segment">
+            <button type="button" class="theme-segment-btn" data-theme="light">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              浅色
+            </button>
+            <button type="button" class="theme-segment-btn" data-theme="dark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              深色
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3>语言</h3>
+          <p class="settings-desc">界面显示语言</p>
+          <div class="setting-row">
+            <label for="setting-language">Language</label>
+            <select id="setting-language" class="select">
+              <option value="zh">中文</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3>Trae IDE 路径</h3>
+          <p class="settings-desc">切换账号时需要定位 Trae 安装目录</p>
+          <div class="path-row">
+            <code id="trae-path" class="trae-path">—</code>
+            <button type="button" id="btn-scan-path" class="btn btn-ghost">自动扫描</button>
+            <button type="button" id="btn-pick-path" class="btn btn-ghost">选择</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3>隐私与合规</h3>
+          <p class="settings-desc">所有账号 Token、Cookie 仅保存在本机，不会上传到任何远程服务器。本工具不提供自动换号或绕过计费的功能。</p>
+          <button type="button" id="btn-show-disclaimer" class="btn btn-ghost">查看使用须知</button>
+        </div>
+
+        <div class="settings-group">
+          <h3>用量监控（可选）</h3>
+          <p class="settings-desc">后台定时拉取各账号 API 用量，仅供信息参考，最短间隔 5 分钟</p>
+
+          <label class="toggle-row">
+            <span>启用自动刷新</span>
+            <input type="checkbox" id="setting-auto-refresh" />
+            <span class="toggle"></span>
+          </label>
+
+          <div class="setting-row">
+            <label for="setting-interval">刷新间隔</label>
+            <select id="setting-interval" class="select">
+              <option value="5">5 分钟</option>
+              <option value="10">10 分钟</option>
+              <option value="15">15 分钟</option>
+              <option value="30">30 分钟</option>
+              <option value="60">60 分钟</option>
+            </select>
+          </div>
+
+          <p id="auto-refresh-status" class="settings-hint">—</p>
+        </div>
+
+        <div class="settings-group">
+          <h3>通知</h3>
+          <p class="settings-desc">Token 过期或用量较低时发送系统通知（默认关闭用量提醒）</p>
+          <label class="toggle-row">
+            <span>低用量提醒</span>
+            <input type="checkbox" id="setting-notify-quota" />
+            <span class="toggle"></span>
+          </label>
+          <div class="setting-row">
+            <label for="setting-quota-threshold">剩余低于</label>
+            <select id="setting-quota-threshold" class="select">
+              <option value="5">5%</option>
+              <option value="10">10%</option>
+              <option value="20">20%</option>
+            </select>
+          </div>
+          <label class="toggle-row">
+            <span>Token 过期提醒</span>
+            <input type="checkbox" id="setting-notify-expiry" checked />
+            <span class="toggle"></span>
+          </label>
+        </div>
+
+        <div class="settings-group">
+          <h3>自动备份</h3>
+          <p class="settings-desc">定时导出账号备份到本地目录（明文 JSON）</p>
+          <label class="toggle-row">
+            <span>启用自动备份</span>
+            <input type="checkbox" id="setting-auto-backup" />
+            <span class="toggle"></span>
+          </label>
+          <div class="setting-row">
+            <label for="setting-backup-interval">备份间隔</label>
+            <select id="setting-backup-interval" class="select">
+              <option value="6">6 小时</option>
+              <option value="12">12 小时</option>
+              <option value="24">24 小时</option>
+              <option value="168">7 天</option>
+            </select>
+          </div>
+          <div class="path-row" style="margin-top:12px">
+            <code id="backup-dir" class="trae-path">—</code>
+            <button type="button" id="btn-pick-backup-dir" class="btn btn-ghost">选择目录</button>
+            <button type="button" id="btn-backup-now" class="btn btn-ghost">立即备份</button>
+          </div>
+          <p id="last-backup-time" class="settings-hint">—</p>
+        </div>
+        </div>
+      </section>
+    </main>
+
+    <p id="toast" class="toast hidden"></p>
+  </div>
+
+  <dialog id="add-dialog" class="dialog">
+    <div class="dialog-body">
+      <div class="dialog-header">
+        <h2>添加账号</h2>
+        <button type="button" id="btn-dialog-close" class="dialog-close" title="关闭" aria-label="关闭">×</button>
+      </div>
+
+      <div class="add-tabs">
+        <button type="button" class="add-tab active" data-mode="browser">浏览器登录</button>
+        <button type="button" class="add-tab" data-mode="token">粘贴 Token</button>
+        <button type="button" class="add-tab" data-mode="trae">从 Trae 导入</button>
+      </div>
+
+      <div class="dialog-content">
+        <div id="panel-browser" class="add-panel">
+          <div class="tips-card">
+            <h3>浏览器授权登录</h3>
+            <ol class="tips-steps compact">
+              <li>点击「打开浏览器登录」</li>
+              <li>在弹出窗口登录 trae.ai</li>
+              <li>成功后自动添加并关闭窗口</li>
+            </ol>
+          </div>
+          <button type="button" id="btn-browser-login" class="btn btn-primary btn-block">打开浏览器登录</button>
+          <p id="browser-login-status" class="status-hint hidden"></p>
+        </div>
+
+        <div id="panel-token" class="add-panel hidden">
+          <div class="tips-card">
+            <h3>粘贴 Token</h3>
+            <details class="tips-details">
+              <summary>如何获取？</summary>
+              <ol class="tips-steps">
+                <li>浏览器打开 trae.ai 并登录</li>
+                <li>F12 → Network → 筛选 <code>GetUserToken</code></li>
+                <li>复制 Response 中的 Token 或整段 JSON</li>
+              </ol>
+            </details>
+          </div>
+          <label>
+            <span>Token</span>
+            <textarea id="token-input" rows="5" placeholder="粘贴 JWT 或 GetUserToken 响应..."></textarea>
+          </label>
+        </div>
+
+        <div id="panel-trae" class="add-panel hidden">
+          <div class="tips-card">
+            <h3>从 Trae IDE 导入</h3>
+            <ol class="tips-steps compact">
+              <li>在 Trae IDE 登录目标账号</li>
+              <li>确认设置页 Trae 路径正确</li>
+              <li>点击下方导入按钮</li>
+            </ol>
+          </div>
+          <button type="button" id="btn-import-in-dialog" class="btn btn-primary btn-block">导入当前账号</button>
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button type="button" id="btn-cancel-add" class="btn">取消</button>
+        <button type="button" id="btn-submit-add" class="btn btn-primary hidden">添加</button>
+        <button type="button" id="btn-cancel-browser" class="btn hidden">取消登录</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="export-dialog" class="dialog dialog-sm">
+    <div class="dialog-body">
+      <div class="dialog-header">
+        <h2>导出账号</h2>
+        <button type="button" id="btn-export-close" class="dialog-close">×</button>
+      </div>
+      <div class="dialog-content">
+        <p id="export-count-hint" class="dialog-hint">将导出 0 个账号</p>
+        <label class="toggle-row compact">
+          <span>密码加密</span>
+          <input type="checkbox" id="export-encrypt" />
+          <span class="toggle"></span>
+        </label>
+        <label id="export-password-wrap" class="hidden">
+          <span>导出密码</span>
+          <input type="password" id="export-password" class="text-input" placeholder="至少 6 位" />
+        </label>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" id="btn-export-cancel" class="btn">取消</button>
+        <button type="button" id="btn-export-confirm" class="btn btn-primary">导出</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="import-dialog" class="dialog dialog-sm">
+    <div class="dialog-body">
+      <div class="dialog-header">
+        <h2>导入账号</h2>
+        <button type="button" id="btn-import-close" class="dialog-close">×</button>
+      </div>
+      <div class="dialog-content">
+        <label>
+          <span>重复账号处理</span>
+          <select id="import-mode" class="select full">
+            <option value="skip">跳过重复</option>
+            <option value="overwrite">覆盖更新 Token</option>
+            <option value="duplicate">全部导入为新账号</option>
+          </select>
+        </label>
+        <p id="import-file-hint" class="dialog-hint import-file-hint hidden"></p>
+        <label id="import-password-wrap" class="hidden" style="margin-top:12px">
+          <span>解密密码</span>
+          <input type="password" id="import-password" class="text-input" placeholder="加密备份的密码" />
+        </label>
+        <p id="import-hint-text" class="dialog-hint">选择 JSON 备份文件；加密备份需输入导出时设置的密码</p>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" id="btn-import-cancel" class="btn">取消</button>
+        <button type="button" id="btn-import-confirm" class="btn btn-primary">选择文件并导入</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="account-detail-dialog" class="dialog">
+    <div class="dialog-body">
+      <div class="dialog-header">
+        <h2>账号详情</h2>
+        <button type="button" id="btn-detail-close" class="dialog-close">×</button>
+      </div>
+      <div class="dialog-content">
+        <input type="hidden" id="detail-account-id" />
+        <label>
+          <span>分组</span>
+          <input type="text" id="detail-group" class="text-input" placeholder="如：工作、测试" />
+        </label>
+        <label style="margin-top:12px">
+          <span>备注</span>
+          <textarea id="detail-note" rows="3" class="text-input" placeholder="备注信息"></textarea>
+        </label>
+        <div class="detail-machine">
+          <span>设备标识 (Machine ID)</span>
+          <code id="detail-machine-id" class="trae-path">—</code>
+          <p class="detail-machine-warning">设备标识用于 Trae 本地会话。修改或重新生成可能触发平台风控，请仅在必要时操作。</p>
+          <div class="detail-actions">
+            <button type="button" id="btn-bind-machine" class="btn btn-ghost">绑定当前设备</button>
+            <button type="button" id="btn-regen-machine" class="btn btn-ghost btn-danger-text">重新生成（高级）</button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" id="btn-detail-cancel" class="btn">取消</button>
+        <button type="button" id="btn-detail-save" class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="disclaimer-dialog" class="dialog dialog-disclaimer">
+    <div class="dialog-body">
+      <div class="dialog-header">
+        <h2>使用须知与免责声明</h2>
+      </div>
+      <div class="dialog-content disclaimer-content">
+        <p><strong>TraeHop</strong> 是一款<strong>本地会话管理工具</strong>，用于管理您本人合法注册、付费或免费开通的 Trae 账号。</p>
+        <ul class="disclaimer-list">
+          <li>所有 Token、Cookie、账号数据<strong>仅保存在您的本地电脑</strong>，本程序不会上传到任何远程服务器，也不介入 Trae 的网络请求</li>
+          <li>本工具<strong>仅支持手动切换</strong>账号，不提供额度耗尽自动换号、批量套利或绕过计费的功能</li>
+          <li>使用本工具可能违反 Trae 用户协议，由此导致的账号限制、封号等后果<strong>由您自行承担</strong></li>
+          <li>请勿将本工具用于批量注册、额度套利、代注册账号或任何商业违规用途</li>
+          <li>「重置环境后切换」和设备标识修改属于高级功能，可能触发平台风控，请谨慎使用</li>
+        </ul>
+        <p class="disclaimer-footer">继续使用即表示您已阅读并同意上述条款。</p>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" id="btn-disclaimer-decline" class="btn">不同意并退出</button>
+        <button type="button" id="btn-disclaimer-accept" class="btn btn-primary">我已阅读并同意</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="i18n.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

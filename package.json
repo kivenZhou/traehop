@@ -1,0 +1,66 @@
+{
+  "name": "traehop",
+  "version": "0.2.0",
+  "description": "TraeHop — hop between your Trae IDE accounts locally",
+  "main": "electron/main.js",
+  "author": "Trae Tools",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --enable-logging",
+    "icons": "bash scripts/generate-icons.sh",
+    "clean:release": "node -e \"require('fs').rmSync('release',{recursive:true,force:true})\"",
+    "pack": "npm run clean:release && electron-builder --dir",
+    "dist": "npm run clean:release && electron-builder",
+    "dist:mac-arm64": "npm run clean:release && electron-builder --mac dmg zip --arm64",
+    "dist:mac-x64": "npm run clean:release && electron-builder --mac dmg zip --x64",
+    "dist:win": "npm run clean:release && electron-builder --win nsis zip --x64",
+    "dist:all": "npm run clean:release && electron-builder --mac dmg zip --arm64 && electron-builder --mac dmg zip --x64 && electron-builder --win nsis zip --x64"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0"
+  },
+  "build": {
+    "appId": "com.trae.hop",
+    "productName": "TraeHop",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**/*",
+      "src/**/*",
+      "build/icon.png",
+      "build/icon.icns",
+      "build/icon.ico",
+      "package.json"
+    ],
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "icon.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "dmg": {
+      "writeUpdateInfo": false
+    },
+    "win": {
+      "icon": "icon.ico",
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
