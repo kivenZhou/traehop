@@ -6,12 +6,18 @@ TraeHop helps developers and teams who legitimately hold multiple Trae accounts 
 
 > **Not** a quota-arbitrage tool. No auto-switch on quota exhaustion. No cloud. No proxy.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey)
-[![GitHub stars](https://img.shields.io/github/stars/kivenZhou/traehop?style=social)](https://github.com/kivenZhou/traehop)
+[![GitHub stars](https://img.shields.io/github/stars/kivenZhou/traehop?style=flat-square&logo=github)](https://github.com/kivenZhou/traehop/stargazers)
+[![GitHub release](https://img.shields.io/github/v/release/kivenZhou/traehop?style=flat-square&logo=github)](https://github.com/kivenZhou/traehop/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey?style=flat-square)
+[![Website](https://img.shields.io/badge/website-www.fastx.ink-6366f1?style=flat-square)](https://www.fastx.ink)
 
 <p align="center">
-  <img src="build/icon.png" alt="TraeHop icon" width="128" height="128" />
+  <img src="build/image.png" alt="TraeHop app screenshot" width="800" />
+</p>
+
+<p align="center">
+  <sub>Manage multiple Trae accounts · manual switch · usage tracking</sub>
 </p>
 
 ---
@@ -210,7 +216,5 @@ npm run icons
 - 所有数据保存在本地，不上传远程服务器  
 - 仅手动切换，不提供额度耗尽自动换号  
 - 使用风险（含封号）由用户自行承担  
-
-**下载：** [GitHub Releases](https://github.com/kivenZhou/traehop/releases) · **官网：** [www.fastx.ink](https://www.fastx.ink)
 
 安装与使用方式见上文 English 部分。
