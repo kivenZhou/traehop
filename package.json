@@ -1,6 +1,6 @@
 {
   "name": "traehop",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "TraeHop — hop between your Trae IDE accounts locally",
   "main": "electron/main.js",
   "author": "Trae Tools",
