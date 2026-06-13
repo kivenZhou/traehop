@@ -8,10 +8,31 @@ TraeHop helps developers and teams who legitimately hold multiple Trae accounts 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey)
+[![GitHub stars](https://img.shields.io/github/stars/kivenZhou/traehop?style=social)](https://github.com/kivenZhou/traehop)
 
 <p align="center">
   <img src="build/icon.png" alt="TraeHop icon" width="128" height="128" />
 </p>
+
+---
+
+## ⭐ If TraeHop helps you, give us a Star!
+
+Open source builds trust — your credentials stay local, and the code is auditable. A Star helps more developers discover TraeHop and keeps the project maintained.
+
+**[⭐ Star on GitHub](https://github.com/kivenZhou/traehop)** · **[📥 Official downloads](https://github.com/kivenZhou/traehop/releases)** · **[🌐 Official website](https://www.fastx.ink)**
+
+---
+
+## Official channels
+
+| Channel | Link | Notes |
+|---------|------|-------|
+| **Product (app + releases)** | [github.com/kivenZhou/traehop](https://github.com/kivenZhou/traehop) | MIT open source · Star here · installers in Releases |
+| **Website** | [www.fastx.ink](https://www.fastx.ink) | Product landing page |
+| **Website source** | [github.com/kivenZhou/fastx](https://github.com/kivenZhou/fastx) | MIT open source · Vue site only |
+
+> Download only from the links above. Third-party repacks may be outdated or tampered with — we cannot verify them.
 
 ---
 
@@ -57,14 +78,29 @@ By using this software, you agree to the above.
 ### From source
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/kivenZhou/traehop.git
 cd traehop
 npm install
 npm run icons   # optional: regenerate app icons from build/icon.svg
 npm start
 ```
 
-### Build installers
+### Pre-built installers (recommended)
+
+Download the latest release from **[GitHub Releases](https://github.com/kivenZhou/traehop/releases)** — no build required.
+
+| Platform | Download |
+|----------|----------|
+| macOS Apple Silicon | `TraeHop-*-mac-arm64.dmg` |
+| macOS Intel | `TraeHop-*-mac-x64.dmg` |
+| Windows x64 | `TraeHop-*-win-x64.exe` |
+
+### Build & publish installers (maintainers)
+
+```bash
+npm run dist:all          # build all platforms → release/
+npm run publish:release   # upload to GitHub Releases (requires gh CLI)
+```
 
 On a Mac (Apple Silicon), you can cross-build all three release artifacts:
 
@@ -79,9 +115,9 @@ Output goes to `release/`, with filenames like:
 
 | Platform | Example artifact |
 |----------|------------------|
-| macOS arm64 | `TraeHop-0.2.0-mac-arm64.dmg` |
-| macOS x64 | `TraeHop-0.2.0-mac-x64.dmg` |
-| Windows | `TraeHop-0.2.0-win-x64.exe` (NSIS) |
+| macOS arm64 | `TraeHop-0.3.0-mac-arm64.dmg` |
+| macOS x64 | `TraeHop-0.3.0-mac-x64.dmg` |
+| Windows | `TraeHop-0.3.0-win-x64.exe` (NSIS) |
 
 **Notes**
 
@@ -135,6 +171,7 @@ Credentials are stored locally in plaintext by default (export supports encrypti
 traehop/
 ├── build/             # App icons (icon.svg → png/icns/ico)
 ├── electron/          # Main process (IPC, switching, API, cleaner)
+├── scripts/           # publish-release.mjs, generate-icons.sh
 ├── src/               # Renderer UI (HTML/CSS/JS)
 └── package.json
 ```
@@ -159,11 +196,21 @@ npm run icons
 
 **TraeHop**（Trae 账号跃迁）是一款**本地多账号切换工具**，面向持有多个合法 Trae 账号的开发者与团队，支持手动一键切换，省去重复登录。
 
+**如果觉得好用，欢迎 [⭐ Star 支持](https://github.com/kivenZhou/traehop)！** 开源让我们彼此信任，也能帮助更多开发者发现这个项目。
+
+**官方渠道：**
+
+- 产品与安装包：[github.com/kivenZhou/traehop](https://github.com/kivenZhou/traehop)（Star 请点这里）
+- 官网：[www.fastx.ink](https://www.fastx.ink)
+- 官网源码：[github.com/kivenZhou/fastx](https://github.com/kivenZhou/fastx)
+
 **合规要点：**
 
 - 仅管理您本人名下、合规注册的 Trae 账号  
 - 所有数据保存在本地，不上传远程服务器  
 - 仅手动切换，不提供额度耗尽自动换号  
 - 使用风险（含封号）由用户自行承担  
+
+**下载：** [GitHub Releases](https://github.com/kivenZhou/traehop/releases) · **官网：** [www.fastx.ink](https://www.fastx.ink)
 
 安装与使用方式见上文 English 部分。

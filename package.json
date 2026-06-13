@@ -14,7 +14,8 @@
     "dist:mac-arm64": "npm run clean:release && electron-builder --mac dmg zip --arm64",
     "dist:mac-x64": "npm run clean:release && electron-builder --mac dmg zip --x64",
     "dist:win": "npm run clean:release && electron-builder --win nsis zip --x64",
-    "dist:all": "npm run clean:release && electron-builder --mac dmg zip --arm64 && electron-builder --mac dmg zip --x64 && electron-builder --win nsis zip --x64"
+    "dist:all": "npm run clean:release && electron-builder --mac dmg zip --arm64 && electron-builder --mac dmg zip --x64 && electron-builder --win nsis zip --x64",
+    "publish:release": "node scripts/publish-release.mjs"
   },
   "license": "MIT",
   "devDependencies": {
